@@ -88,52 +88,49 @@ delay_after_reboot(){
 }
 
 read_versionfile(){
-if [[ -f $wooper_versions ]] ;then
-discord_webhook=$(grep 'discord_webhook' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
-fi
-if [[ -z $discord_webhook ]] ;then
-  discord_webhook=$(grep discord_webhook /data/local/wooper_download | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
-fi
-
-#Scriptbrach
-branch=$(grep 'branch' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
-if [[ -z $branch ]] ;then
-  branch=main
-fi
-
-#Overwrite branch with a local config file for testing on a single device
-if [ -e "$branchoverwrite" ]; then
-    branch=$(grep 'branch' $branchoverwrite | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
-fi
-
-  #apk google or samsung
-  apk=$(grep '^apk=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
-  if [[ "$apk" == "samsung" ]]; then
-      :
-  else
-      apk="google"
+  if [[ -f $wooper_versions ]] ;then
+  discord_webhook=$(grep 'discord_webhook' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+  fi
+  if [[ -z $discord_webhook ]] ;then
+    discord_webhook=$(grep discord_webhook /data/local/wooper_download | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
   fi
 
-  if [ "$apk" == "samsung" ]; then
-      pogo_package=$pogo_package_samsung
-  elif [ "$apk" == "google" ]; then
-      pogo_package=$pogo_package_google
-  else
-      pogo_package=$pogo_package_google
+  #Scriptbrach
+  branch=$(grep 'branch' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+  if [[ -z $branch ]] ;then
+    branch=main
   fi
 
-# apkbundle enabled or disabled
-apkm=$(grep '^apkm=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+  #Overwrite branch with a local config file for testing on a single device
+  if [ -e "$branchoverwrite" ]; then
+      branch=$(grep 'branch' $branchoverwrite | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+  fi
 
-# adbfingerprint anabled or disabled
-adbfingerprint=$(grep '^adbfingerprint=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+    #apk google or samsung
+    apk=$(grep '^apk=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+    if [[ "$apk" == "samsung" ]]; then
+        :
+    else
+        apk="google"
+    fi
 
-#logger apk=$apk
-#logger pogoPackage=$pogo_package
+    if [ "$apk" == "samsung" ]; then
+        pogo_package=$pogo_package_samsung
+    elif [ "$apk" == "google" ]; then
+        pogo_package=$pogo_package_google
+    else
+        pogo_package=$pogo_package_google
+    fi
+
+  # apkbundle enabled or disabled
+  apkm=$(grep '^apkm=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+
+  # adbfingerprint anabled or disabled
+  adbfingerprint=$(grep '^adbfingerprint=' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+
+  #logger apk=$apk
+  #logger pogoPackage=$pogo_package
 }
-
-read_versionfile
-
 
 reboot_device(){
     echo "`date +%Y-%m-%d_%T` Reboot device" >> $logfile
@@ -168,8 +165,8 @@ mount_system_ro() {
 
 download_versionfile() {
 # verify download credential file and set download
-if [[ ! -f /data/local/wooper_download ]] ;then
-    echo "`date +%Y-%m-%d_%T` File /data/local/wooper_download not found, exit script" >> $logfile && exit 1
+if [[ ! -f /data/local/tmp/wooper.config ]] ;then
+    echo "`date +%Y-%m-%d_%T` File /data/local/wooper.config not found, exit script" >> $logfile && exit 1
 else
     if [[ $wooper_user == "" ]] ;then
         download="/system/bin/curl -s -k -L --fail --show-error -o"
@@ -219,7 +216,7 @@ download_versionfile
 # search discord webhook url for install log
 discord_webhook=$(grep 'discord_webhook' $wooper_versions | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
 if [[ -z $discord_webhook ]] ;then
-  discord_webhook=$(grep discord_webhook /data/local/wooper_download | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
+  discord_webhook=$(grep discord_webhook /data/local/tmp/wooper.config | awk -F "=" '{ print $NF }' | sed -e 's/^"//' -e 's/"$//')
 fi
 
 
@@ -507,17 +504,16 @@ download_versionfile
 
 #download latest wooper.sh
 if [[ $(basename $0) != "wooper_new.sh" ]] ;then
-    mount_system_rw
     oldsh=$(head -2 $MODDIR/wooper.sh | /system/bin/grep '# version' | awk '{ print $NF }')
     until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
     done
     chmod +x $MODDIR/wooper_new.sh
+    dos2unix $MODDIR/wooper_new.sh
     newsh=$(head -2 $MODDIR/wooper_new.sh | /system/bin/grep '# version' | awk '{ print $NF }')
     if [[ "$oldsh" != "$newsh" ]] ;then
         logger "wooper.sh updated $oldsh=>$newsh | Github branch $branch, restarting script"
         cp $MODDIR/wooper_new.sh $MODDIR/wooper.sh
-        mount_system_ro
         . "$MODDIR/wooper.sh" $@
         exit 1
     fi
@@ -532,6 +528,7 @@ if [[ $(basename $0) = "wooper_new.sh" ]] ;then
       sleep 2
     done
     chmod +x $MODDIR/wooper_monitor.sh
+    dos2unix $MODDIR/wooper_monitor.sh
     newMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }')
 	  logger "wooper monitor updated $oldMonitor => $newMonitor | Github branch $branch"
 	

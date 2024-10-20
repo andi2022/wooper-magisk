@@ -222,7 +222,10 @@ on_install() {
     else
         ui_print " >>> Installing ATV services..."
         cp -rf "$TMPDIR/custom/wooper.sh" "$MODPATH/wooper.sh"
+        dos2unix "$MODPATH/wooper.sh"
         cp -rf "$TMPDIR/custom/wooper_monitor.sh" "$MODPATH/wooper_monitor.sh"
+        dos2unix "$MODPATH/wooper_monitor.sh"
+
     fi
     ui_print "================================================"
 }
