@@ -75,7 +75,7 @@ delay_after_reboot(){
 }
 delay_after_reboot
 
-if [ -f "$MODDIR/ATVServices.sh" ]; then
+if [ -f "$MODDIR/wooper.sh" ]; then
     sleep 20
     echo "`date +%Y-%m-%d_%T` Starting wooper.sh" >> $logfile
     . "$MODDIR/wooper.sh" -ua
