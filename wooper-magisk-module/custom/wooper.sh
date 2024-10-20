@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.25
+# version 1.7.26
 
 #Version checks
 VerMonitor="1.2.8"
@@ -45,6 +45,7 @@ adb_keys="/data/misc/adb/adb_keys"
 branchoverwrite="/data/local/tmp/branch"
 pogo_package_samsung="com.nianticlabs.pokemongo.ares"
 pogo_package_google="com.nianticlabs.pokemongo"
+reboot="0"
 
 source $wooper_config
 export device_name
