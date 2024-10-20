@@ -428,7 +428,7 @@ update_all(){
             # Base APK file
             BASE_APK="/sdcard/Download/pogoapkm/base.apk"
             # Split APK files
-            SPLIT_APKS="/sdcard/Download/pogoapkm/split_config*.apk"
+            SPLIT_APKS=(/sdcard/Download/pogoapkm/split_config*.apk)
             # Calculate total size of all APKs
             TOTAL_SIZE=$(stat -c%s "$BASE_APK")
             for APK in "${SPLIT_APKS[@]}"; do
