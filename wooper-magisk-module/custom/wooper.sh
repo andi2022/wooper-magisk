@@ -1,10 +1,8 @@
 #!/system/bin/sh
-# version 1.7.24
+# version 1.7.25
 
 #Version checks
-Ver55wooper="1.2"
-Ver55cron="1.3"
-VerMonitor="1.2.7"
+VerMonitor="1.2.8"
 
 logfile="/data/local/tmp/wooper.log"
 
@@ -633,6 +631,10 @@ for i in "$@" ;do
         -dp) downgrade_pogo;;
     esac
 done
-echo "`date +%Y-%m-%d_%T` DEBUG $reboot" >> $logfile
-(( $reboot )) && reboot_device
+
+# Check if reboot is equal to 1
+if [ "$reboot" -eq 1 ]; then
+    reboot_device
+fi
+
 exit
