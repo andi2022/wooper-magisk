@@ -425,7 +425,32 @@ update_all(){
           pm uninstall $pogo_package
           sleep 2
           if [ "$apkm" = "true" ] ;then
-            /system/bin/pm install -r /sdcard/Download/pogoapkm/base.apk && /system/bin/pm install -p com.nianticlabs.pokemongo -r /sdcard/Download/pogoapkm/split_config.*.apk || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
+            # Base APK file
+            BASE_APK="/sdcard/Download/pogoapkm/base.apk"
+            # Split APK files
+            SPLIT_APKS=("/sdcard/Download/pogoapkm/split_config*.apk")
+            # Calculate total size of all APKs
+            TOTAL_SIZE=$(stat -c%s "$BASE_APK")
+            for APK in "${SPLIT_APKS[@]}"; do
+                TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$APK")))
+            done
+            # Create an installation session
+            SESSION_ID=$(pm install-create -S $TOTAL_SIZE | awk -F'[][]' '{print $2}')
+            # Check if session ID was created successfully
+            if [ -z "$SESSION_ID" ]; then
+                echo "Failed to create installation session."
+                exit 1
+            fi
+            # Stage the base APK
+            pm install-write -S $(stat -c%s "$BASE_APK") $SESSION_ID 0 "$BASE_APK" || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
+            # Stage the split APKs
+            INDEX=1
+            for APK in "${SPLIT_APKS[@]}"; do
+                pm install-write -S $(stat -c%s "$APK") $SESSION_ID $INDEX "$APK" || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
+                INDEX=$((INDEX + 1))
+            done
+            # Commit the installation
+            pm install-commit $SESSION_ID || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
             /system/bin/rm -f -r /sdcard/Download/pogoapkm
           else
             /system/bin/pm install -r /sdcard/Download/pogo.apk || { echo "`date +%Y-%m-%d_%T` Install pogo failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
@@ -498,14 +523,12 @@ downgrade_pogo(){
 }
 
 ########## Execution
-
-delay_after_reboot
 download_versionfile
 
 #download latest wooper.sh
 if [[ $(basename $0) != "wooper_new.sh" ]] ;then
     oldsh=$(head -2 $MODDIR/wooper.sh | /system/bin/grep '# version' | awk '{ print $NF }')
-    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh -v https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
     done
     chmod +x $MODDIR/wooper_new.sh
@@ -572,6 +595,7 @@ fi
 
 # check exeggcute config file exists
 if [[ -d /data/data/com.gocheats.launcher ]] && [[ ! -s $exeggcute ]] ;then
+    download_versionfile
     install_config
     am force-stop com.gocheats.launcher
     /system/bin/monkey -p com.gocheats.launcher 1 > /dev/null 2>&1
