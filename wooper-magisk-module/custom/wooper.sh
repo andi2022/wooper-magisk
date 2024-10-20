@@ -171,7 +171,7 @@ else
     if [[ $wooper_user == "" ]] ;then
         download="/system/bin/curl -s -k -L --fail --show-error -o"
     else
-        download="/system/bin/curl -s -k -L --fail --show-error --user $wooper_user:$wooper_pass -o $wooper_url/versions"
+        download="/system/bin/curl -s -k -L --fail --show-error --user $wooper_user:$wooper_pass -o"
     fi
 fi
 
@@ -505,7 +505,7 @@ download_versionfile
 #download latest wooper.sh
 if [[ $(basename $0) != "wooper_new.sh" ]] ;then
     oldsh=$(head -2 $MODDIR/wooper.sh | /system/bin/grep '# version' | awk '{ print $NF }')
-    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh -v https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
     done
     chmod +x $MODDIR/wooper_new.sh
