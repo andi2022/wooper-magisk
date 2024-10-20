@@ -428,12 +428,9 @@ update_all(){
               # Base APK file
               BASE_APK="/sdcard/Download/pogoapkm/base.apk"
               
-              # Split APK files
-              SPLIT_APKS=(/sdcard/Download/pogoapkm/split_config*.apk)
-              
               # Calculate total size of all APKs
               TOTAL_SIZE=$(stat -c%s "$BASE_APK")
-              for APK in "${SPLIT_APKS[@]}"; do
+              for APK in /sdcard/Download/pogoapkm/split_config*.apk; do
                   TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$APK")))
               done
               
@@ -451,7 +448,7 @@ update_all(){
               
               # Stage the split APKs
               INDEX=1
-              for APK in "${SPLIT_APKS[@]}"; do
+              for APK in /sdcard/Download/pogoapkm/split_config*.apk; do
                   pm install-write -S $(stat -c%s "$APK") $SESSION_ID $INDEX "$APK" || { logger "install pogo failed, downgrade perhaps? Exit script"; exit 1; }
                   INDEX=$((INDEX + 1))
               done
