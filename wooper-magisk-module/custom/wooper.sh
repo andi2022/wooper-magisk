@@ -223,34 +223,8 @@ if [[ -z $discord_webhook ]] ;then
 fi
 
 
-    # install 55wooper
-	mount_system_rw
-	until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55wooper https://raw.githubusercontent.com/andi2022/wooper/$branch/55wooper || { echo "`date +%Y-%m-%d_%T` Download 55wooper failed, exit script" >> $logfile ; exit 1; } ;do
-        sleep 2
-    done
-    chmod +x /system/etc/init.d/55wooper
-    logger "55wooper installed"
-
-    # install 55cron
-    until /system/bin/curl -s -k -L --fail --show-error -o  /system/etc/init.d/55cron https://raw.githubusercontent.com/andi2022/wooper/$branch/55cron || { echo "`date +%Y-%m-%d_%T` Download 55cron failed, exit script" >> $logfile ; exit 1; } ;do
-        sleep 2
-    done
-    chmod +x /system/etc/init.d/55cron
-    logger "55cron installed"
-
-    # install cron job
-    until /system/bin/curl -s -k -L --fail --show-error -o  $MODDIR/ping_test.sh https://raw.githubusercontent.com/andi2022/wooper/$branch/ping_test.sh || { echo "`date +%Y-%m-%d_%T` Download ping_test.sh failed, exit script" >> $logfile ; exit 1; } ;do
-        sleep 2
-    done
-    chmod +x $MODDIR/ping_test.sh
-    mkdir /data/crontabs || true
-    touch /data/crontabs/root
-    echo "15 * * * * $MODDIR/ping_test.sh" > /data/crontabs/root
-	crond -b -c /data/crontabs
-	logger "cron jobs installed"
-
 	# install wooper monitor
-	until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper/$branch/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; } ;do
+	until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; } ;do
 		sleep 2
 	done
 	chmod +x $MODDIR/wooper_monitor.sh
@@ -535,7 +509,7 @@ download_versionfile
 if [[ $(basename $0) != "wooper_new.sh" ]] ;then
     mount_system_rw
     oldsh=$(head -2 $MODDIR/wooper.sh | /system/bin/grep '# version' | awk '{ print $NF }')
-    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh https://raw.githubusercontent.com/andi2022/wooper/$branch/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_new.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper.sh || { echo "`date +%Y-%m-%d_%T` Download wooper.sh failed, exit script" >> $logfile ; exit 1; } ;do
         sleep 2
     done
     chmod +x $MODDIR/wooper_new.sh
@@ -554,7 +528,7 @@ fi
 if [[ $(basename $0) = "wooper_new.sh" ]] ;then
   [ -f $MODDIR/wooper_monitor.sh ] && oldMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }') || oldMonitor="0"
   if [ $VerMonitor != $oldMonitor ] ;then
-    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper/$branch/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; } ;do
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; } ;do
       sleep 2
     done
     chmod +x $MODDIR/wooper_monitor.sh
