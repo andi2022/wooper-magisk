@@ -171,7 +171,7 @@ else
     if [[ $wooper_user == "" ]] ;then
         download="/system/bin/curl -s -k -L --fail --show-error -o"
     else
-        download="/system/bin/curl -s -k -L --fail --show-error --user $wooper_user:$wooper_pass -o"
+        download="/system/bin/curl -s -k -L --fail --show-error --user $wooper_user:$wooper_pass -o $wooper_url/versions"
     fi
 fi
 
