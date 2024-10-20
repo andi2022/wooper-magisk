@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.23
+# version 1.7.24
 
 #Version checks
 Ver55wooper="1.2"
@@ -633,6 +633,6 @@ for i in "$@" ;do
         -dp) downgrade_pogo;;
     esac
 done
-
+echo "`date +%Y-%m-%d_%T` DEBUG $reboot" >> $logfile
 (( $reboot )) && reboot_device
 exit
