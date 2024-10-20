@@ -424,37 +424,46 @@ update_all(){
           sleep 2
           pm uninstall $pogo_package
           sleep 2
-          if [ "$apkm" = "true" ] ;then
-            # Base APK file
-            BASE_APK="/sdcard/Download/pogoapkm/base.apk"
-            # Split APK files
-            SPLIT_APKS=(/sdcard/Download/pogoapkm/split_config*.apk)
-            # Calculate total size of all APKs
-            TOTAL_SIZE=$(stat -c%s "$BASE_APK")
-            for APK in "${SPLIT_APKS[@]}"; do
-                TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$APK")))
-            done
-            # Create an installation session
-            SESSION_ID=$(pm install-create -S $TOTAL_SIZE | awk -F'[][]' '{print $2}')
-            # Check if session ID was created successfully
-            if [ -z "$SESSION_ID" ]; then
-                echo "Failed to create installation session."
-                exit 1
-            fi
-            # Stage the base APK
-            pm install-write -S $(stat -c%s "$BASE_APK") $SESSION_ID 0 "$BASE_APK" || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
-            # Stage the split APKs
-            INDEX=1
-            for APK in "${SPLIT_APKS[@]}"; do
-                pm install-write -S $(stat -c%s "$APK") $SESSION_ID $INDEX "$APK" || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
-                INDEX=$((INDEX + 1))
-            done
-            # Commit the installation
-            pm install-commit $SESSION_ID || { logger "install pogo failed, downgrade perhaps? Exit script" ; exit 1; }
-            /system/bin/rm -f -r /sdcard/Download/pogoapkm
+          if [ "$apkm" = "true" ]; then
+              # Base APK file
+              BASE_APK="/sdcard/Download/pogoapkm/base.apk"
+              
+              # Split APK files
+              SPLIT_APKS=(/sdcard/Download/pogoapkm/split_config*.apk)
+              
+              # Calculate total size of all APKs
+              TOTAL_SIZE=$(stat -c%s "$BASE_APK")
+              for APK in "${SPLIT_APKS[@]}"; do
+                  TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$APK")))
+              done
+              
+              # Create an installation session
+              SESSION_ID=$(pm install-create -S $TOTAL_SIZE | awk -F'[][]' '{print $2}')
+              
+              # Check if session ID was created successfully
+              if [ -z "$SESSION_ID" ]; then
+                  echo "Failed to create installation session."
+                  exit 1
+              fi
+              
+              # Stage the base APK
+              pm install-write -S $(stat -c%s "$BASE_APK") $SESSION_ID 0 "$BASE_APK" || { logger "install pogo failed, downgrade perhaps? Exit script"; exit 1; }
+              
+              # Stage the split APKs
+              INDEX=1
+              for APK in "${SPLIT_APKS[@]}"; do
+                  pm install-write -S $(stat -c%s "$APK") $SESSION_ID $INDEX "$APK" || { logger "install pogo failed, downgrade perhaps? Exit script"; exit 1; }
+                  INDEX=$((INDEX + 1))
+              done
+              
+              # Commit the installation
+              pm install-commit $SESSION_ID || { logger "install pogo failed, downgrade perhaps? Exit script"; exit 1; }
+              
+              # Clean up
+              /system/bin/rm -f -r /sdcard/Download/pogoapkm
           else
-            /system/bin/pm install -r /sdcard/Download/pogo.apk || { echo "`date +%Y-%m-%d_%T` Install pogo failed, downgrade perhaps? Exit script" >> $logfile ; exit 1; }
-            /system/bin/rm -f /sdcard/Download/pogo.apk
+              /system/bin/pm install -r /sdcard/Download/pogo.apk || { echo "$(date +%Y-%m-%d_%T) Install pogo failed, downgrade perhaps? Exit script" >> $logfile; exit 1; }
+              /system/bin/rm -f /sdcard/Download/pogo.apk
           fi
         /system/bin/monkey -p com.gocheats.launcher 1 > /dev/null 2>&1
         logger "PoGo $pversions, launcher started"
