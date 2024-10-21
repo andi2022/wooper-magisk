@@ -246,8 +246,8 @@ fi
     logger "exeggcute installed"
 
     # Grant su access + settings
-	euid="$(dumpsys package com.gocheats.launcher | /system/bin/grep userId | awk -F'=' '{print $2}')"
-	magisk --sqlite "REPLACE INTO policies (uid,policy,until,logging,notification) VALUES($euid,2,0,1,1);"
+    euid="$(dumpsys package com.gocheats.launcher | /system/bin/grep userId | awk -F'=' '{print $2}')"
+    magisk --sqlite "REPLACE INTO policies (uid,policy,until,logging,notification) VALUES($euid,2,0,1,1);"
     /system/bin/pm grant com.gocheats.launcher android.permission.READ_EXTERNAL_STORAGE
     /system/bin/pm grant com.gocheats.launcher android.permission.WRITE_EXTERNAL_STORAGE
     logger "exeggcute granted su"
@@ -399,7 +399,7 @@ update_all(){
       echo "`date +%Y-%m-%d_%T` All updates checked and downloaded if needed" >> $logfile
       if [ "$exeggcute_install" = "install" ] ;then
         logger "Start updating exeggcute"
-        # install gocheats
+        # install exeggcute
         am force-stop com.gocheats.launcher
         sleep 2
         pm uninstall com.gocheats.launcher
