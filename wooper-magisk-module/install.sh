@@ -201,7 +201,9 @@ on_install() {
         cp -rf "$TMPDIR/custom/${filename}" "$SDCARD/.${filename}"
     done
 
-    ui_print " >>> Installing ATV services..."
+    ui_print " >>> Installing Scripts..."
+    cp -rf "$TMPDIR/custom/init.sh" "$MODPATH/init.sh"
+    dos2unix "$MODPATH/init.sh"
     cp -rf "$TMPDIR/custom/wooper.sh" "$MODPATH/wooper.sh"
     dos2unix "$MODPATH/wooper.sh"
     cp -rf "$TMPDIR/custom/wooper_monitor.sh" "$MODPATH/wooper_monitor.sh"

@@ -75,6 +75,11 @@ delay_after_reboot(){
 }
 delay_after_reboot
 
+if [ -f "$MODDIR/init.sh" ]; then
+    echo "`date +%Y-%m-%d_%T` Starting init.sh" >> $logfile
+    . "$MODDIR/init.sh" -ua
+fi
+
 if [ -f "$MODDIR/wooper.sh" ]; then
     sleep 20
     echo "`date +%Y-%m-%d_%T` Starting wooper.sh" >> $logfile
