@@ -200,7 +200,6 @@ if [ ! -f $initdir/initend ]; then
 	clear_google_data
 	delete_tmp_files
 	touch $initdir/initend
-	reboot
 fi
 pogo_disable_update
 log 'Done'
