@@ -1,7 +1,8 @@
 #!/system/bin/sh
-# version 1.2.9
+# version 1.2.10
 
 logfile="/data/local/tmp/wooper_monitor.log"
+MODDIR="/data/adb/module/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 origin=$(cat $exeggcute | tr , '\n' | grep -w 'device_name' | awk -F "\"" '{ print $4 }')
@@ -102,7 +103,7 @@ update_check=$((update_check_interval/monitor_interval))
 
 check_for_updates() {
 	[[ $debug == "true" ]] && echo "`date +%Y-%m-%d_%T` [MONITORBOT] Checking for updates" >> $logfile
-	. "$MODDIR/wooper.sh" -ua
+	"$MODDIR/wooper.sh" -ua
 	sleep 20
 }
 
@@ -126,6 +127,7 @@ reboot_device(){
     /system/bin/reboot
 }
 
+stop_start_exeggcute
 echo "`date +%Y-%m-%d_%T` [MONITORBOT] Starting exeggcute data monitor in 2 mins, loop is $monitor_interval seconds" >> $logfile
 [[ $debug == "true" ]] && echo "`date +%Y-%m-%d_%T` [MONITORBOT] DEBUG sleep command is now starting" >> $logfile
 sleep 120
