@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.33
+# version 1.7.34
 
 #Version checks
 VerMonitor="1.2.11"
@@ -40,7 +40,7 @@ appdir="/data/wooper"
 MODDIR="/data/adb/modules/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
-wooper_config="/data/local/tmp/wooper.config"
+base_wooper_config="/data/local/tmp/base_wooper.config"
 wooper_adb_keys="/data/local/wooper_adb_keys"
 adb_keys="/data/misc/adb/adb_keys"
 branchoverwrite="/data/local/tmp/branch"
@@ -48,7 +48,7 @@ pogo_package_samsung="com.nianticlabs.pokemongo.ares"
 pogo_package_google="com.nianticlabs.pokemongo"
 reboot="0"
 
-source $wooper_config
+source $base_wooper_config
 export device_name
 export wooper_url
 export wooper_user
