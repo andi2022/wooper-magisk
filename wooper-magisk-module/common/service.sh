@@ -1,4 +1,6 @@
 #!/system/bin/sh
+# version 1.0.0
+
 # Do NOT assume where your module will be located.
 # ALWAYS use $MODDIR if you need to know where this script
 # and module is placed.
@@ -77,11 +79,11 @@ delay_after_reboot
 
 if [ -f "$MODDIR/init.sh" ]; then
     echo "`date +%Y-%m-%d_%T` Starting init.sh" >> $logfile
-    . "$MODDIR/init.sh"
+    "$MODDIR/init.sh"
 fi
 
 if [ -f "$MODDIR/wooper.sh" ]; then
     sleep 20
     echo "`date +%Y-%m-%d_%T` Starting wooper.sh" >> $logfile
-    . "$MODDIR/wooper.sh" -ua
+    "$MODDIR/wooper.sh" -ua
 fi
