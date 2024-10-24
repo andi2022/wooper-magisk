@@ -37,6 +37,7 @@ checklogfile
 
 android_version=`getprop ro.build.version.release | sed -e 's/\..*//'`
 appdir="/data/wooper"
+$MODDIR="/data/adb/module/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 wooper_config="/data/local/tmp/wooper.config"

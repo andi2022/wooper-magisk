@@ -77,7 +77,7 @@ delay_after_reboot
 
 if [ -f "$MODDIR/init.sh" ]; then
     echo "`date +%Y-%m-%d_%T` Starting init.sh" >> $logfile
-    . "$MODDIR/init.sh" -ua
+    . "$MODDIR/init.sh"
 fi
 
 if [ -f "$MODDIR/wooper.sh" ]; then

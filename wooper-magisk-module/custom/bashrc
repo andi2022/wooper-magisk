@@ -359,32 +359,6 @@ function findir() {
 ### | | | | | | (_| \__ \  __/\__ \  | (_| | | | | (_| |  \ \_/ /\ V /  __/ |  | |  | | (_| |  __/\__ \
 ### \_| |_/_|_|\__,_|___/\___||___/   \__,_|_| |_|\__,_|   \___/  \_/ \___|_|  |_|  |_|\__,_|\___||___/
 
-##  +-+-+-+-+-+ +-+-+-+-+
-##  |S|p|i|c|y| |G|r|e|p|
-##  +-+-+-+-+-+ +-+-+-+-+
-## This makes grep run without the extra arguments unless it's being either piped:
-##   cat ~/.bashrc | grep "LESS"
-## or normally ran interactively:
-##   grep ~/.bashrc "^export"
-## This way it'll work for <(grep ..) or var=$(grep ..) or echo '' | grep
-## but won't affect scripts or other complex command chains.
-##
-## It also fixes errors when stupid programs like adb or docker use grep
-## to filter autocompletion results screwing the list when pressing TAB.
-##
-## This is a replacement for the old 'alias grep="grep -n -C 2 $_COLOR_ALWAYS_ARG -E"'
-function grep {
-    if [ -t 0 ] || [ -t 1 ]; then
-        command grep -n -C 2 $_COLOR_ALWAYS_ARG -E "$@"
-    elif { [ "$(LC_ALL=C stat -c %F - <&3)" = fifo ]; } 3>&1 ||
-           [ "$(LC_ALL=C stat -c %F -)" = fifo ] ||
-           [ -t 2 ]; then
-        # t -2 fixes adb -s [TAB] and other autocompletion
-        command grep "$@"
-    else
-        command grep "$@"
-    fi
-}
 
 ##  +-+-+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+-+
 ##  |O|v|e|r|r|i|d|i|n|g| |A|l|i|a|s|e|s|

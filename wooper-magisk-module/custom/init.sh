@@ -113,33 +113,6 @@ do_settings() {
 	fi
 }
 
-generateRandomString() {
-	length="$1"
-	characters="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	result=""
-	for i in $(seq 1 "$length"); do
-		randomChar="${characters:$(($RANDOM % ${#characters})):1}"
-		result="${result}${randomChar}"
-	done
-	echo "$result"
-}
-
-configureUnifyKeys() {
-	if [ ! -f $initdir/unifykey ]; then
-		log 'Changing the value generated in the device..'
-		su
-		echo 1 > /sys/class/unifykeys/attach
-		echo "usid" > /sys/class/unifykeys/name
-		randomValue=$(generateRandomString 10)
-		echo "$randomValue" > /sys/class/unifykeys/write
-		unifykeyname=$(cat /sys/class/unifykeys/read)
-		echo 0 > /sys/class/unifykeys/lock
-		log "Changed the unifykey name to: $unifykeyname"
-		touch $initdir/unifykey
-	fi
-}
-
-
 setup_magisk_settings() {
 	if [ ! -f $initdir/magiskset ]; then
 		denylist_count=`magisk --sqlite 'select count(*) from denylist' | awk -F= '{ print $2 }'`
@@ -203,4 +176,3 @@ if [ ! -f $initdir/initend ]; then
 fi
 pogo_disable_update
 log 'Done'
-exit 0
