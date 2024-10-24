@@ -1,8 +1,8 @@
 #!/system/bin/sh
-# version 1.7.42
+# version 1.7.43
 
 #Version checks
-VerMonitor="1.2.14"
+VerMonitor="1.2.15"
 
 logfile="/data/local/tmp/wooper.log"
 

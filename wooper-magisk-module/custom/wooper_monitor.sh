@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.2.14
+# version 1.2.15
 
 logfile="/data/local/tmp/wooper_monitor.log"
 MODDIR="/data/adb/modules/wooper"
@@ -115,7 +115,7 @@ if [ -n "$files" ]; then
   echo "$files" | xargs rm
   echo "`date +%Y-%m-%d_%T` Old log files removed." >> $logfile
 fi
-}                                                                   $                  $£
+}
 
 stop_start_exeggcute () {
 	am force-stop $pogo_package &  rm -rf /data/data/$pogo_package/cache/* & am force-stop com.gocheats.launcher
