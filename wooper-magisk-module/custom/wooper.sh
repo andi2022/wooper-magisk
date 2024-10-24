@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.45
+# version 1.7.46
 
 #Version checks
 VerMonitor="1.2.15"
@@ -398,6 +398,10 @@ update_all(){
 	  /system/bin/monkey -p com.gocheats.launcher 1 > /dev/null 2>&1
 	else
      echo "`date +%Y-%m-%d_%T` workers count ok or not enabled" >> $logfile
+    fi
+
+    if [ ! -f "/data/local/tmp/config.json" ]; then
+    install_config
     fi
 
     if [ ! -z "$exeggcute_install" ] && [ ! -z "$pogo_install" ] && [ ! -z "$playintegrityfix_install" ] ;then
