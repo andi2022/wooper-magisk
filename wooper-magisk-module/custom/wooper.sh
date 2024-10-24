@@ -1,8 +1,8 @@
 #!/system/bin/sh
-# version 1.7.29
+# version 1.7.30
 
 #Version checks
-VerMonitor="1.2.10"
+VerMonitor="1.2.11"
 
 logfile="/data/local/tmp/wooper.log"
 
@@ -37,7 +37,7 @@ checklogfile
 
 android_version=`getprop ro.build.version.release | sed -e 's/\..*//'`
 appdir="/data/wooper"
-$MODDIR="/data/adb/module/wooper"
+$MODDIR="/data/adb/modules/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 wooper_config="/data/local/tmp/wooper.config"

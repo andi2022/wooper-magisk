@@ -1,8 +1,8 @@
 #!/system/bin/sh
-# version 1.2.10
+# version 1.2.11
 
 logfile="/data/local/tmp/wooper_monitor.log"
-MODDIR="/data/adb/module/wooper"
+MODDIR="/data/adb/modules/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 origin=$(cat $exeggcute | tr , '\n' | grep -w 'device_name' | awk -F "\"" '{ print $4 }')
