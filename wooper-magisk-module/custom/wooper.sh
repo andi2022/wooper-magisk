@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.37
+# version 1.7.38
 
 #Version checks
 VerMonitor="1.2.12"
@@ -550,8 +550,10 @@ fi
 
 
 #update wooper monitor if needed
+echo $(basename $0) >> $logfile
 if [[ $(basename $0) = "wooper_new.sh" ]]; then
   [ -f $MODDIR/wooper_monitor.sh ] && oldMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }') || oldMonitor="0"
+  echo $VerMonitor != $oldMonitor >> $logfile
   if [ $VerMonitor != $oldMonitor ]; then
     until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; }; do
       sleep 2
@@ -559,6 +561,7 @@ if [[ $(basename $0) = "wooper_new.sh" ]]; then
     chmod +x $MODDIR/wooper_monitor.sh
     dos2unix $MODDIR/wooper_monitor.sh
     newMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }')
+    echo $newMonitor >> $logfile
     logger "wooper monitor updated $oldMonitor => $newMonitor | Github branch $branch"
     
     # restart wooper monitor

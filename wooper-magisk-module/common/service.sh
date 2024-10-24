@@ -87,3 +87,5 @@ if [ -f "$MODDIR/wooper.sh" ]; then
     echo "`date +%Y-%m-%d_%T` Starting wooper.sh" >> $logfile
     "$MODDIR/wooper.sh" -ua
 fi
+
+echo "`date +%Y-%m-%d_%T` ################ Boot completed ################" >> $logfile
