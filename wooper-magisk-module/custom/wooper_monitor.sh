@@ -1,8 +1,9 @@
 #!/system/bin/sh
-# version 1.2.12
+# version 1.2.13
 
 logfile="/data/local/tmp/wooper_monitor.log"
 MODDIR="/data/adb/modules/wooper"
+tmp="/data/local/tmp"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 origin=$(cat $exeggcute | tr , '\n' | grep -w 'device_name' | awk -F "\"" '{ print $4 }')
@@ -107,6 +108,14 @@ check_for_updates() {
 	sleep 20
 }
 
+clean_exeggcute_logs() {
+# Find and remove the log files
+files=$(find "$tmp" -name "Exeggcute*.log" -type f -mmin +60)
+if [ -n "$files" ]; then
+  echo "$files" | xargs rm
+  echo "`date +%Y-%m-%d_%T` Old log files removed." >> $logfile
+fi
+
 stop_start_exeggcute () {
 	am force-stop $pogo_package &  rm -rf /data/data/$pogo_package/cache/* & am force-stop com.gocheats.launcher
 	sleep 5
@@ -150,6 +159,7 @@ do
 		echo  "`date +%Y-%m-%d_%T` [MONITORBOT] Checking Exeggcute and Pogo for update" >> $logfile
 		updatecheck=0
 		check_for_updates
+		clean_exeggcute_logs
 	fi
 
 	if [ -d /data/data/com.gocheats.launcher ] && [ -s /data/local/tmp/config.json ]

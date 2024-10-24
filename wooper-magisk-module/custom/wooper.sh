@@ -1,8 +1,8 @@
 #!/system/bin/sh
-# version 1.7.38
+# version 1.7.39
 
 #Version checks
-VerMonitor="1.2.12"
+VerMonitor="1.2.13"
 
 logfile="/data/local/tmp/wooper.log"
 
@@ -543,7 +543,7 @@ if [[ $(basename $0) != "wooper_new.sh" ]] ;then
     if [[ "$oldsh" != "$newsh" ]] ;then
         logger "wooper.sh updated $oldsh=>$newsh | Github branch $branch, restarting script"
         cp $MODDIR/wooper_new.sh $MODDIR/wooper.sh
-        . "$MODDIR/wooper.sh" $@
+        "$MODDIR/wooper_new.sh" $@
         exit 1
     fi
 fi
