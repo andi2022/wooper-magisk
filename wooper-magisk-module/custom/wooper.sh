@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.30
+# version 1.7.32
 
 #Version checks
 VerMonitor="1.2.11"
@@ -37,7 +37,7 @@ checklogfile
 
 android_version=`getprop ro.build.version.release | sed -e 's/\..*//'`
 appdir="/data/wooper"
-$MODDIR="/data/adb/modules/wooper"
+MODDIR="/data/adb/modules/wooper"
 exeggcute="/data/local/tmp/config.json"
 wooper_versions="/data/local/wooper_versions"
 wooper_config="/data/local/tmp/wooper.config"
@@ -550,25 +550,28 @@ fi
 
 
 #update wooper monitor if needed
-if [[ $(basename $0) = "wooper_new.sh" ]] ;then
+if [[ $(basename $0) = "wooper_new.sh" ]]; then
+  echo "Running wooper_new.sh script"
   [ -f $MODDIR/wooper_monitor.sh ] && oldMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }') || oldMonitor="0"
-  if [ $VerMonitor != $oldMonitor ] ;then
-    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; } ;do
+  echo "Old Monitor Version: $oldMonitor"
+  if [ $VerMonitor != $oldMonitor ]; then
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/wooper_monitor.sh https://raw.githubusercontent.com/andi2022/wooper-magisk/$branch/wooper-magisk-module/custom/wooper_monitor.sh || { echo "`date +%Y-%m-%d_%T` Download wooper_monitor.sh failed, exit script" >> $logfile ; exit 1; }; do
       sleep 2
     done
     chmod +x $MODDIR/wooper_monitor.sh
     dos2unix $MODDIR/wooper_monitor.sh
     newMonitor=$(head -2 $MODDIR/wooper_monitor.sh | grep '# version' | awk '{ print $NF }')
-	  logger "wooper monitor updated $oldMonitor => $newMonitor | Github branch $branch"
-	
+    echo "New Monitor Version: $newMonitor"
+    logger "wooper monitor updated $oldMonitor => $newMonitor | Github branch $branch"
+    
     # restart wooper monitor
-    if [[ $(grep useMonitor $wooper_versions | awk -F "=" '{ print $NF }') == "true" ]] && [ -f $MODDIR/wooper_monitor.sh ] ;then
+    if [[ $(grep useMonitor $wooper_versions | awk -F "=" '{ print $NF }') == "true" ]] && [ -f $MODDIR/wooper_monitor.sh ]; then
       checkMonitor=$(pgrep -f $MODDIR/wooper_monitor.sh)
-      if [ ! -z $checkMonitor ] ;then
+      if [ ! -z $checkMonitor ]; then
         kill -9 $checkMonitor
         sleep 2
         "$MODDIR/wooper_monitor.sh" >/dev/null 2>&1 &
-		    logger "wooper monitor restarted"
+        logger "wooper monitor restarted"
       fi
     fi
   fi
