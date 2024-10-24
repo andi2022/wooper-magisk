@@ -1,8 +1,8 @@
 #!/system/bin/sh
-# version 1.7.26
+# version 1.7.28
 
 #Version checks
-VerMonitor="1.2.8"
+VerMonitor="1.2.9"
 
 logfile="/data/local/tmp/wooper.log"
 
@@ -567,7 +567,7 @@ if [[ $(basename $0) = "wooper_new.sh" ]] ;then
       if [ ! -z $checkMonitor ] ;then
         kill -9 $checkMonitor
         sleep 2
-        . "$MODDIR/wooper_monitor.sh" >/dev/null 2>&1 &
+        "$MODDIR/wooper_monitor.sh" >/dev/null 2>&1 &
 		    logger "wooper monitor restarted"
       fi
     fi
@@ -611,7 +611,7 @@ fi
 if [[ $(grep useMonitor $wooper_versions | awk -F "=" '{ print $NF }' | awk '{ gsub(/ /,""); print }') == "true" ]] && [ -f $MODDIR/wooper_monitor.sh ] ;then
   checkMonitor=$(pgrep -f $MODDIR/wooper_monitor.sh)
   if [ -z $checkMonitor ] ;then
-    . "$MODDIR/wooper_monitor.sh" >/dev/null 2>&1 &
+    "$MODDIR/wooper_monitor.sh" >/dev/null 2>&1 &
     echo "`date +%Y-%m-%d_%T` wooper.sh: wooper monitor enabled" >> $logfile
   fi
 fi

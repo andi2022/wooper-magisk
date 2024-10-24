@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.2.8
+# version 1.2.9
 
 logfile="/data/local/tmp/wooper_monitor.log"
 exeggcute="/data/local/tmp/config.json"
@@ -195,7 +195,7 @@ do
         sleep 60
     fi
 
-	focusedapp=$(dumpsys window windows | grep -E 'mFocusedApp'| cut -d / -f 1 | cut -d " " -f 7)
+	focusedapp=$(dumpsys activity activities | grep -E 'mResumedActivity' | awk '{print $4}' | awk -F '/' '{print $1}')
     if [ "$focusedapp" != "$pogo_package" ]
     then
         echo "`date +%Y-%m-%d_%T` [MONITORBOT] Something is not right! PoGo is not in focus. Killing PoGo and clearing junk" >> $logfile
