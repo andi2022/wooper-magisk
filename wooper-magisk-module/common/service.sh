@@ -82,10 +82,10 @@ if [ -f "$MODDIR/init.sh" ]; then
     "$MODDIR/init.sh"
 fi
 
+echo "`date +%Y-%m-%d_%T` ################ Boot completed ################" >> $logfile
+
 if [ -f "$MODDIR/wooper.sh" ]; then
     sleep 20
     echo "`date +%Y-%m-%d_%T` Starting wooper.sh" >> $logfile
     "$MODDIR/wooper.sh" -ua
 fi
-
-echo "`date +%Y-%m-%d_%T` ################ Boot completed ################" >> $logfile
