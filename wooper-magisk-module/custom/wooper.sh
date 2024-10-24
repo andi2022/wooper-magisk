@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.44
+# version 1.7.45
 
 #Version checks
 VerMonitor="1.2.15"
@@ -316,7 +316,6 @@ update_all(){
     playintegrityfixinstalled=$(cat /data/adb/modules/playintegrityfix/module.prop | /system/bin/grep version | head -n1 | /system/bin/sed 's/ *version=v//')    
 	  playintegrityfixupdate=$(/system/bin/grep 'playintegrityfixupdate' $wooper_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')	
 	  playintegrityfixversions=$(/system/bin/grep 'playintegrityfixversion' $wooper_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
-    echo "$workerscount / $workerscount_override" >> $logfile
     if [ -n "$workerscount_override" ]; then
     workerscount=$workerscount_override
     fi
