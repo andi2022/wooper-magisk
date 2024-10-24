@@ -165,8 +165,8 @@ mount_system_ro() {
 
 download_versionfile() {
 # verify download credential file and set download
-if [[ ! -f /data/local/tmp/wooper.config ]] ;then
-    echo "`date +%Y-%m-%d_%T` File /data/local/wooper.config not found, exit script" >> $logfile && exit 1
+if [[ ! -f $base_wooper_config ]] ;then
+    echo "`date +%Y-%m-%d_%T` File $base_wooper_config not found, exit script" >> $logfile && exit 1
 else
     if [[ $wooper_user == "" ]] ;then
         download="/system/bin/curl -s -k -L --fail --show-error -o"
