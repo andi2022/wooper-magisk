@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.43
+# version 1.7.44
 
 #Version checks
 VerMonitor="1.2.15"
@@ -53,6 +53,7 @@ export device_name
 export wooper_url
 export wooper_user
 export wooper_pass
+export workerscount_override
 
 # stderr to logfile
 exec 2>> $logfile
@@ -315,6 +316,10 @@ update_all(){
     playintegrityfixinstalled=$(cat /data/adb/modules/playintegrityfix/module.prop | /system/bin/grep version | head -n1 | /system/bin/sed 's/ *version=v//')    
 	  playintegrityfixupdate=$(/system/bin/grep 'playintegrityfixupdate' $wooper_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')	
 	  playintegrityfixversions=$(/system/bin/grep 'playintegrityfixversion' $wooper_versions | /system/bin/grep -v '_' | awk -F "=" '{ print $NF }')
+    echo "$workerscount / $workerscount_override" >> $logfile
+    if [ -n "$workerscount_override" ]; then
+    workerscount=$workerscount_override
+    fi
 
     if [[ "$apk" = "google" ]] ;then
       if pm list packages | grep -w "^package:$pogo_package_samsung$"; then
