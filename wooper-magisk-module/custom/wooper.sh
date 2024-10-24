@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.7.36
+# version 1.7.37
 
 #Version checks
 VerMonitor="1.2.12"
