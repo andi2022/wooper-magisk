@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# version 1.2.15
+# version 1.2.16
 
 logfile="/data/local/tmp/wooper_monitor.log"
 MODDIR="/data/adb/modules/wooper"
@@ -138,9 +138,9 @@ reboot_device(){
 }
 
 stop_start_exeggcute
-echo "`date +%Y-%m-%d_%T` [MONITORBOT] Starting exeggcute data monitor in 2 mins, loop is $monitor_interval seconds" >> $logfile
+echo "`date +%Y-%m-%d_%T` [MONITORBOT] Starting exeggcute data monitor in 5 mins, loop is $monitor_interval seconds" >> $logfile
 [[ $debug == "true" ]] && echo "`date +%Y-%m-%d_%T` [MONITORBOT] DEBUG sleep command is now starting" >> $logfile
-sleep 120
+sleep 300
 [[ $debug == "true" ]] && echo "`date +%Y-%m-%d_%T` [MONITORBOT] DEBUG Starting data monitor" >> $logfile
 while :
 do
