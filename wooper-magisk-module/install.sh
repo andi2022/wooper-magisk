@@ -192,11 +192,6 @@ on_install() {
     for filepath in $TMPDIR/custom/*; do
         filename=${filepath##*/}
         [ "$filename" == "ATVServices.sh" ] && continue
-        # if [ -f "$SDCARD/.${filename}" ] || [ -d "$SDCARD/${filename}" ]]; then
-        #     ui_print "   $SDCARD/.${filename} is already intalled! Backing up to $SDCARD/EmagiskBackups/"
-        #     mkdir -p "$SDCARD/EmagiskBackups"
-        #     cp -rf "$SDCARD/.${filename}" "$SDCARD/EmagiskBackups/${filename}.bak"
-        # fi
         ui_print "   Copying ${filename} to $SDCARD/.${filename}"
         cp -rf "$TMPDIR/custom/${filename}" "$SDCARD/.${filename}"
     done
