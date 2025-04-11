@@ -1,8 +1,9 @@
 #!/system/bin/sh
-# version 1.7.49
+# version 1.7.50
 
 #Version checks
 VerMonitor="1.2.17"
+VerInit="1.0.0"
 
 logfile="/data/local/tmp/wooper.log"
 
@@ -538,6 +539,20 @@ downgrade_pogo(){
 
 ########## Execution
 download_versionfile
+
+#update wooper init if needed
+if [[ $(basename $0) = "wooper_new.sh" ]]; then
+  [ -f $MODDIR/init.sh ] && oldInit=$(head -2 $MODDIR/init.sh | grep '# version' | awk '{ print $NF }') || oldInit="0"
+  if [ $VerInit != $oldInit ]; then
+    until /system/bin/curl -s -k -L --fail --show-error -o $MODDIR/init.sh https://raw.githubusercontent.com/andi2022/wooper/$branch/wooper-magisk-module/custom/init.sh || { echo "`date +%Y-%m-%d_%T` Download init.sh failed, exit script" >> $logfile ; exit 1; }; do
+      sleep 2
+    done
+    chmod +x $MODDIR/init.sh
+    dos2unix $MODDIR/init.sh
+    newInit=$(head -2 $MODDIR/init.sh | grep '# version' | awk '{ print $NF }')
+    logger "wooper init updated $oldInit => $newInit | Github branch $branch"
+  fi
+fi
 
 #download latest wooper.sh
 if [[ $(basename $0) != "wooper_new.sh" ]] ;then
